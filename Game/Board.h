@@ -40,6 +40,7 @@ public:
                 print_exception("SDL_GetDesktopDisplayMode can't get desctop display mode");
                 return 1;
             }
+            // Рисует доску.
             W = min(dm.w, dm.h);
             W -= W / 15;
             H = W;
@@ -56,11 +57,13 @@ public:
             print_exception("SDL_CreateRenderer can't create renderer");
             return 1;
         }
+        // Создаёт текстуру доски.
         board = IMG_LoadTexture(ren, board_path.c_str());
         w_piece = IMG_LoadTexture(ren, piece_white_path.c_str());
         b_piece = IMG_LoadTexture(ren, piece_black_path.c_str());
         w_queen = IMG_LoadTexture(ren, queen_white_path.c_str());
         b_queen = IMG_LoadTexture(ren, queen_black_path.c_str());
+        // Кнопки назад и начать заново.
         back = IMG_LoadTexture(ren, back_path.c_str());
         replay = IMG_LoadTexture(ren, replay_path.c_str());
         if (!board || !w_piece || !b_piece || !w_queen || !b_queen || !back || !replay)
@@ -76,7 +79,9 @@ public:
 
     void redraw()
     {
+        // Перерисовать доску.
         game_results = -1;
+        // Обнуление результатов игры.
         history_mtx.clear();
         history_beat_series.clear();
         make_start_mtx();
@@ -88,8 +93,10 @@ public:
     {
         if (turn.xb != -1)
         {
+            // Двигать шашку
             mtx[turn.xb][turn.yb] = 0;
         }
+        // Продолжать её двигать.
         move_piece(turn.x, turn.y, turn.x2, turn.y2, beat_series);
     }
 
@@ -103,6 +110,7 @@ public:
         {
             throw runtime_error("begin position is empty, can't move");
         }
+        // Переброска шашек.
         if ((mtx[i][j] == 1 && i2 == 0) || (mtx[i][j] == 2 && i2 == 7))
             mtx[i][j] += 2;
         mtx[i2][j2] = mtx[i][j];
@@ -112,26 +120,31 @@ public:
 
     void drop_piece(const POS_T i, const POS_T j)
     {
+        // Прорисовка переброски.
         mtx[i][j] = 0;
         rerender();
     }
 
     void turn_into_queen(const POS_T i, const POS_T j)
     {
+        // Превратить шашку в дамку.
         if (mtx[i][j] == 0 || mtx[i][j] > 2)
         {
             throw runtime_error("can't turn into queen in this position");
         }
+        // Прорисовка превращения.
         mtx[i][j] += 2;
         rerender();
     }
     vector<vector<POS_T>> get_board() const
     {
+        // Вернуть доску.
         return mtx;
     }
 
     void highlight_cells(vector<pair<POS_T, POS_T>> cells)
     {
+        // Подсвечивать ячейки.
         for (auto pos : cells)
         {
             POS_T x = pos.first, y = pos.second;
@@ -142,6 +155,7 @@ public:
 
     void clear_highlight()
     {
+        // Убрать подсветку.
         for (POS_T i = 0; i < 8; ++i)
         {
             is_highlighted_[i].assign(8, 0);
@@ -151,6 +165,7 @@ public:
 
     void set_active(const POS_T x, const POS_T y)
     {
+        // Сделать участки доски активными.
         active_x = x;
         active_y = y;
         rerender();
@@ -158,6 +173,7 @@ public:
 
     void clear_active()
     {
+        // Убрать статус активного участка.
         active_x = -1;
         active_y = -1;
         rerender();
@@ -165,11 +181,13 @@ public:
 
     bool is_highlighted(const POS_T x, const POS_T y)
     {
+        // Подсвечено?
         return is_highlighted_[x][y];
     }
 
     void rollback()
     {
+        // Возврат позиции шашек назад.
         auto beat_series = max(1, *(history_beat_series.rbegin()));
         while (beat_series-- && history_mtx.size() > 1)
         {
@@ -183,6 +201,7 @@ public:
 
     void show_final(const int res)
     {
+        // Показ результатов игры.
         game_results = res;
         rerender();
     }
@@ -190,12 +209,14 @@ public:
     // use if window size changed
     void reset_window_size()
     {
+        // Возврат исходного размера окна.
         SDL_GetRendererOutputSize(ren, &W, &H);
         rerender();
     }
 
     void quit()
     {
+        // Выйти из игры.
         SDL_DestroyTexture(board);
         SDL_DestroyTexture(w_piece);
         SDL_DestroyTexture(b_piece);

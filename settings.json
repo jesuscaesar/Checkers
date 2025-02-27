@@ -1,19 +1,22 @@
 {
     "WindowSize": {
+        "_comment": "Устанавливает размер окна, значения равные 0 являются стандартными.",
         "Width": 0,
         "Hight": 0
     },
     "Bot": {
-        "IsWhiteBot": false,
+        "_comment": "isWhiteBot и IsBlackBot определяют, берёт ли под управление бот белые и/или чёрные шашки соответственно. Далее настройки уровня сложности игрока-бота за белые и чёрные шашки соответственно, способ вычисления очков бота, его задержка в миллисекундах, параметр, исключающий случайность, и формула оптимизации операционной сложности кода.",
+        "IsWhiteBot": true,
         "IsBlackBot": true,
-        "WhiteBotLevel": 0,
-        "BlackBotLevel": 5,
+        "WhiteBotLevel": 3,
+        "BlackBotLevel": 4,
         "BotScoringType": "NumberAndPotential",
-        "BotDelayMS": 0,
-        "NoRandom": false,
+        "BotDelayMS": 2,
+        "NoRandom": true,
         "Optimization": "O1"
     },
     "Game": {
+        "_comment": "Максимальное число шагов, делаемыми игроками.",
         "MaxNumTurns": 120
     }
 }

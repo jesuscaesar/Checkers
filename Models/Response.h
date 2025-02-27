@@ -2,9 +2,9 @@
 
 enum class Response
 {
-    OK,
-    BACK,
-    REPLAY,
-    QUIT,
-    CELL
+    OK, // Продолжать ход.
+    BACK, // Откат назад хода.
+    REPLAY, // Играть заново.
+    QUIT, // Выйти из игры.
+    CELL // Ячейка.
 };

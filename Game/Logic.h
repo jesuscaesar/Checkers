@@ -13,6 +13,7 @@ class Logic
   public:
     Logic(Board *board, Config *config) : board(board), config(config)
     {
+        // Создание логики игры.
         rand_eng = std::default_random_engine (
             !((*config)("Bot", "NoRandom")) ? unsigned(time(0)) : 0);
         scoring_mode = (*config)("Bot", "BotScoringType");
